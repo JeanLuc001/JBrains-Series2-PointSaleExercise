@@ -6,22 +6,22 @@ import java.util.Optional;
 public class Checkout
 {
 	private final Display disp;
-	private final Warehouse warehouse;
+	private final Inventory inventory;
 
 	public Checkout(Display disp)
 	{
 		this(disp, null);
 	}
 
-	public Checkout(Display disp, Warehouse warehouse)
+	public Checkout(Display disp, Inventory inventory)
 	{
 		this.disp = disp;
-		this.warehouse = warehouse;
+		this.inventory = inventory;
 	}
 
 	public void onBarcode(String code)
 	{
-		Optional<BigDecimal> price = warehouse.getPriceFromCode(code);
+		Optional<BigDecimal> price = inventory.getPriceFromCode(code);
 		if (!price.isPresent())
 		{
 			disp.show("ERROR: " + code + " is an invalid bar code");

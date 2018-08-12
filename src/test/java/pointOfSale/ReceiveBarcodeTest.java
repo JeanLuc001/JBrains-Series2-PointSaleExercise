@@ -19,20 +19,20 @@ public class ReceiveBarcodeTest
 	@Mock
 	private Display disp;
 	@Mock
-	private Warehouse warehouse;
+	private Inventory inventory;
 
 	@Before
 	public void init()
 	{
 		MockitoAnnotations.initMocks(this);
-		sut = new Checkout(disp, warehouse);
+		sut = new Checkout(disp, inventory);
 	}
 
 	@Test
 	public void when_product_not_in_warehouse_then_show_error_message() throws Exception
 	{
 		String invalidBarcode = "124a45";
-		when(warehouse.getPriceFromCode(invalidBarcode)).thenReturn(Optional.empty());
+		when(inventory.getPriceFromCode(invalidBarcode)).thenReturn(Optional.empty());
 		sut.onBarcode(invalidBarcode);
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		verify(disp).show(argument.capture());
@@ -45,7 +45,7 @@ public class ReceiveBarcodeTest
 		String validBarcode = "063491028120";
 		String priceAsString = "11.50";
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-		when(warehouse.getPriceFromCode(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
+		when(inventory.getPriceFromCode(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
 		sut.onBarcode(validBarcode);
 		verify(disp).show(argument.capture());
 		BigDecimal price = new BigDecimal(priceAsString);
