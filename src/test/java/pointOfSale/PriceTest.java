@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class PrizeTest
+public class PriceTest
 {
 	@Test(expected = IllegalArgumentException.class)
 	public void when_negative_then_exception()
