@@ -1,6 +1,7 @@
 package pointOfSale;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public class Checkout
 {
@@ -20,31 +21,14 @@ public class Checkout
 
 	public void onBarcode(String code)
 	{
-		BigDecimal price = warehouse.getPriceFromCode(code);
-		if (price == null)
+		Optional<BigDecimal> price = warehouse.getPriceFromCode(code);
+		if (!price.isPresent())
 		{
-			String message = isValidCodeThenNullElseErrorMessage(code);
-			disp.show(message);
+			disp.show("ERROR: " + code + " is an invalid bar code");
 		}
 		else
 		{
-			disp.show("$ " + price.toEngineeringString());
-		}
-	}
-
-	private String isValidCodeThenNullElseErrorMessage(String code)
-	{
-		if (code != null && !code.isEmpty())
-		{
-			return "ERROR: " + code + " is an invalid bar code";
-		}
-		else if (code == null)
-		{
-			return "ERROR: invalid bar code";
-		}
-		else
-		{
-			return "ERROR: invalid bar code";
+			disp.show("$ " + price.get().toEngineeringString());
 		}
 	}
 }

@@ -1,10 +1,11 @@
 package pointOfSale;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,36 +25,17 @@ public class ReceiveBarcodeTest
 	public void init()
 	{
 		MockitoAnnotations.initMocks(this);
-		sut = new Checkout(disp,warehouse);
-	}
-
-	private ArgumentCaptor<String> captureDisplayedMessage(String code)
-	{
-		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-		sut.onBarcode(code);
-		verify(disp).show(argument.capture());
-		return argument;
+		sut = new Checkout(disp, warehouse);
 	}
 
 	@Test
-	public void when_empty_barcodestring_then_display_error_message() throws Exception
-	{
-		ArgumentCaptor<String> argument = captureDisplayedMessage("");
-		assertEquals("ERROR: invalid bar code", argument.getValue());
-	}
-
-	@Test
-	public void when_barcodestring_is_null_then_display_error_message()
-	{
-		ArgumentCaptor<String> argument = captureDisplayedMessage(null);
-		assertEquals("ERROR: invalid bar code", argument.getValue());
-	}
-
-	@Test
-	public void when_barcodestring_has_wrong_format_then_display_error_message()
+	public void when_product_not_in_warehouse_then_show_error_message() throws Exception
 	{
 		String invalidBarcode = "124a45";
-		ArgumentCaptor<String> argument = captureDisplayedMessage(invalidBarcode);
+		when(warehouse.getPriceFromCode(invalidBarcode)).thenReturn(Optional.empty());
+		sut.onBarcode(invalidBarcode);
+		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+		verify(disp).show(argument.capture());
 		assertEquals("ERROR: " + invalidBarcode + " is an invalid bar code", argument.getValue());
 	}
 
@@ -62,8 +44,10 @@ public class ReceiveBarcodeTest
 	{
 		String validBarcode = "063491028120";
 		String priceAsString = "11.50";
-		when(warehouse.getPriceFromCode(validBarcode)).thenReturn(new BigDecimal(priceAsString));
-		ArgumentCaptor<String> argument = captureDisplayedMessage(validBarcode);
+		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+		when(warehouse.getPriceFromCode(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
+		sut.onBarcode(validBarcode);
+		verify(disp).show(argument.capture());
 		BigDecimal price = new BigDecimal(priceAsString);
 		String expectedMessage = "$ " + price.toString();
 		assertEquals(expectedMessage, argument.getValue());
