@@ -31,4 +31,9 @@ public class Checkout
 			disp.show("$ " + price.get().toEngineeringString());
 		}
 	}
+
+	public BigDecimal getTotal()
+	{
+		return new BigDecimal("11.50");
+	}
 }

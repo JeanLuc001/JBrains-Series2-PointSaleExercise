@@ -52,4 +52,15 @@ public class ReceiveBarcodeTest
 		String expectedMessage = "$ " + price.toString();
 		assertEquals(expectedMessage, argument.getValue());
 	}
+	
+	@Test
+	public void when_barcode_is_valid_then_get_total_amount() throws Exception
+	{
+		String validBarcode = "063491028120";
+		String priceAsString = "11.50";
+		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+		when(inventory.getProductPriceFromCode(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
+		sut.onBarcode(validBarcode);
+		assertEquals(sut.getTotal(), new BigDecimal(priceAsString));
+	}
 }
