@@ -58,9 +58,22 @@ public class ReceiveBarcodeTest
 	{
 		String validBarcode = "063491028120";
 		String priceAsString = "11.50";
-		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		when(inventory.getProductPriceFromCode(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
 		sut.onBarcode(validBarcode);
 		assertEquals(sut.getTotal(), new BigDecimal(priceAsString));
+	}
+	
+	@Test
+	public void when_multiple_barcodes_then_get_total_amount() throws Exception
+	{
+		String validBarcode1 = "063491028120";
+		String priceAsString1 = "11.50";
+		String validBarcode2 = "123491028120";
+		String priceAsString2 = "5.99";
+		when(inventory.getProductPriceFromCode(validBarcode1)).thenReturn(Optional.of(new BigDecimal(priceAsString1)));
+		when(inventory.getProductPriceFromCode(validBarcode2)).thenReturn(Optional.of(new BigDecimal(priceAsString2)));
+		sut.onBarcode(validBarcode1);
+		sut.onBarcode(validBarcode2);
+		assertEquals(sut.getTotal(), new BigDecimal("17.49"));
 	}
 }
