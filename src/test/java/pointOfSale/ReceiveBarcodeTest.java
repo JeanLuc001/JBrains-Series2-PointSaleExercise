@@ -1,6 +1,6 @@
 package pointOfSale;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,6 +20,12 @@ public class ReceiveBarcodeTest
 	private Display disp;
 	@Mock
 	private Inventory inventory;
+
+	private void simulateScanningValidBarcode(String validBarcode, String priceAsString)
+	{
+		when(inventory.getProductPriceFromCode(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
+		sut.onBarcode(validBarcode);
+	}
 
 	@Before
 	public void init()
@@ -45,35 +51,25 @@ public class ReceiveBarcodeTest
 		String validBarcode = "063491028120";
 		String priceAsString = "11.50";
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-		when(inventory.getProductPriceFromCode(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
-		sut.onBarcode(validBarcode);
+		simulateScanningValidBarcode(validBarcode, priceAsString);
 		verify(disp).show(argument.capture());
 		BigDecimal price = new BigDecimal(priceAsString);
 		String expectedMessage = "$ " + price.toString();
 		assertEquals(expectedMessage, argument.getValue());
 	}
-	
+
 	@Test
 	public void when_barcode_is_valid_then_get_total_amount() throws Exception
 	{
-		String validBarcode = "063491028120";
-		String priceAsString = "11.50";
-		when(inventory.getProductPriceFromCode(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
-		sut.onBarcode(validBarcode);
-		assertEquals(sut.getTotal(), new BigDecimal(priceAsString));
+		simulateScanningValidBarcode("063491028120", "11.50");
+		assertEquals(sut.getTotal(), new BigDecimal("11.50"));
 	}
-	
+
 	@Test
 	public void when_multiple_barcodes_then_get_total_amount() throws Exception
 	{
-		String validBarcode1 = "063491028120";
-		String priceAsString1 = "11.50";
-		String validBarcode2 = "123491028120";
-		String priceAsString2 = "5.99";
-		when(inventory.getProductPriceFromCode(validBarcode1)).thenReturn(Optional.of(new BigDecimal(priceAsString1)));
-		when(inventory.getProductPriceFromCode(validBarcode2)).thenReturn(Optional.of(new BigDecimal(priceAsString2)));
-		sut.onBarcode(validBarcode1);
-		sut.onBarcode(validBarcode2);
+		simulateScanningValidBarcode("063491028120", "11.50");
+		simulateScanningValidBarcode("123491028120", "5.99");
 		assertEquals(sut.getTotal(), new BigDecimal("17.49"));
 	}
 }
