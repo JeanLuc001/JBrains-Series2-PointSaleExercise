@@ -24,6 +24,7 @@ public class ReceiveBarcodeTest
 	private void simulateScanningValidBarcode(String validBarcode, String priceAsString)
 	{
 		when(inventory.getProductPriceFromCodeAsBigDecimal(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
+		when(inventory.getProductPriceFromCode(validBarcode)).thenReturn(Optional.of(new Price(priceAsString)));
 		sut.onBarcode(validBarcode);
 	}
 

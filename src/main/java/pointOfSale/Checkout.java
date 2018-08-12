@@ -9,7 +9,8 @@ public class Checkout
 {
 	private final Display disp;
 	private final Inventory inventory;
-	private List<BigDecimal> purchase;
+	private final List<BigDecimal> purchaseAsBigDecimals;
+	private final List<Price> purchase;
 
 	public Checkout(Display disp)
 	{
@@ -20,31 +21,43 @@ public class Checkout
 	{
 		this.disp = disp;
 		this.inventory = inventory;
+		purchaseAsBigDecimals = new ArrayList<>();
 		purchase = new ArrayList<>();
 	}
 
 	public void onBarcode(String code)
 	{
-		Optional<BigDecimal> oPrice = inventory.getProductPriceFromCodeAsBigDecimal(code);
-		if (!oPrice.isPresent())
+		Optional<BigDecimal> oPriceAsBigDecimal = inventory.getProductPriceFromCodeAsBigDecimal(code);
+		Optional<Price> oPrice = inventory.getProductPriceFromCode(code);
+		if (!oPriceAsBigDecimal.isPresent())
 		{
 			disp.show("ERROR: " + code + " is an invalid bar code");
 		}
 		else
 		{
-			BigDecimal price = oPrice.get();
+			BigDecimal priceAsBigDecimal = oPriceAsBigDecimal.get();
+			purchaseAsBigDecimals.add(priceAsBigDecimal);
+//			disp.show("$ " + priceAsBigDecimal.toString());
+			
+			Price price = oPrice.get();
 			purchase.add(price);
-			disp.show("$ " + price.toString());
+			disp.show(price.toString());
 		}
 	}
 
 	public BigDecimal getTotal()
 	{
-		BigDecimal total = BigDecimal.ZERO;
-		for (BigDecimal itemPrice : purchase)
+		BigDecimal totalAsBigDecimal = BigDecimal.ZERO;
+		for (BigDecimal itemPrice : purchaseAsBigDecimals)
 		{
-			total = total.add(itemPrice);
+			totalAsBigDecimal = totalAsBigDecimal.add(itemPrice);
 		}
-		return total;
+		
+//		Price total = new Price("0.00");
+//		for (Price price : purchase)
+//		{
+//			total = total.add(other);
+//		}
+		return totalAsBigDecimal;
 	}
 }
