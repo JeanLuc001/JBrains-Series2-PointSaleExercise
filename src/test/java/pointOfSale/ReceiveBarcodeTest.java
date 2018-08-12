@@ -34,7 +34,7 @@ public class ReceiveBarcodeTest
 	}
 
 	@Test
-	public void when_product_not_in_warehouse_then_show_error_message() throws Exception
+	public void when_product_not_in_inventory_then_show_error_message() throws Exception
 	{
 		String invalidBarcode = "124a45";
 		when(inventory.getProductPriceFromCode(invalidBarcode)).thenReturn(Optional.empty());
@@ -64,7 +64,7 @@ public class ReceiveBarcodeTest
 	}
 
 	@Test
-	public void when_multiple_barcodes_then_get_total_amount() throws Exception
+	public void when_multiple_valid_barcodes_then_get_total_amount() throws Exception
 	{
 		simulateScanningValidBarcode("063491028120", "11.50");
 		simulateScanningValidBarcode("123491028120", "5.99");
