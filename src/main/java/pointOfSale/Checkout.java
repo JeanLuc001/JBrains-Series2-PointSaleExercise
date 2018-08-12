@@ -10,11 +10,6 @@ public class Checkout
 	private final Inventory inventory;
 	private final List<Price> purchase;
 
-	public Checkout(Display disp)
-	{
-		this(disp, null);
-	}
-
 	public Checkout(Display disp, Inventory inventory)
 	{
 		this.disp = disp;
