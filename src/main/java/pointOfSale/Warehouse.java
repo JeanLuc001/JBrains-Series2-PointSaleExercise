@@ -1,8 +1,9 @@
 package pointOfSale;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public interface Warehouse
 {
-	BigDecimal getPriceFromCode(String validBarcode);
+	Optional<BigDecimal> getPriceFromCode(String validBarcode);
 }
