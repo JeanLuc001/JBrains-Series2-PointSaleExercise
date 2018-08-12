@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -23,7 +22,6 @@ public class ReceiveBarcodeTest
 
 	private void simulateScanningValidBarcode(String validBarcode, String priceAsString)
 	{
-		when(inventory.getProductPriceFromCodeAsBigDecimal(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
 		when(inventory.getProductPriceFromCode(validBarcode)).thenReturn(Optional.of(new Price(priceAsString)));
 		sut.onBarcode(validBarcode);
 	}
@@ -39,7 +37,7 @@ public class ReceiveBarcodeTest
 	public void when_product_not_in_warehouse_then_show_error_message() throws Exception
 	{
 		String invalidBarcode = "124a45";
-		when(inventory.getProductPriceFromCodeAsBigDecimal(invalidBarcode)).thenReturn(Optional.empty());
+		when(inventory.getProductPriceFromCode(invalidBarcode)).thenReturn(Optional.empty());
 		sut.onBarcode(invalidBarcode);
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		verify(disp).show(argument.capture());
@@ -54,8 +52,7 @@ public class ReceiveBarcodeTest
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		simulateScanningValidBarcode(validBarcode, priceAsString);
 		verify(disp).show(argument.capture());
-		BigDecimal price = new BigDecimal(priceAsString);
-		String expectedMessage = "$ " + price.toString();
+		String expectedMessage = new Price(priceAsString).toString();
 		assertEquals(expectedMessage, argument.getValue());
 	}
 
@@ -63,8 +60,7 @@ public class ReceiveBarcodeTest
 	public void when_barcode_is_valid_then_get_total_amount() throws Exception
 	{
 		simulateScanningValidBarcode("063491028120", "11.50");
-		assertEquals(sut.getTotalAsBigDecimal(), new BigDecimal("11.50"));
-//		assertEquals(sut.getTotalAsBigDecimal(), new Price("11.50"));
+		assertEquals(sut.getTotal(), new Price("11.50"));
 	}
 
 	@Test
@@ -72,6 +68,6 @@ public class ReceiveBarcodeTest
 	{
 		simulateScanningValidBarcode("063491028120", "11.50");
 		simulateScanningValidBarcode("123491028120", "5.99");
-		assertEquals(sut.getTotalAsBigDecimal(), new BigDecimal("17.49"));
+		assertEquals(sut.getTotal(), new Price("17.49"));
 	}
 }
