@@ -63,7 +63,8 @@ public class ReceiveBarcodeTest
 	public void when_barcode_is_valid_then_get_total_amount() throws Exception
 	{
 		simulateScanningValidBarcode("063491028120", "11.50");
-		assertEquals(sut.getTotal(), new BigDecimal("11.50"));
+		assertEquals(sut.getTotalAsBigDecimal(), new BigDecimal("11.50"));
+//		assertEquals(sut.getTotalAsBigDecimal(), new Price("11.50"));
 	}
 
 	@Test
@@ -71,6 +72,6 @@ public class ReceiveBarcodeTest
 	{
 		simulateScanningValidBarcode("063491028120", "11.50");
 		simulateScanningValidBarcode("123491028120", "5.99");
-		assertEquals(sut.getTotal(), new BigDecimal("17.49"));
+		assertEquals(sut.getTotalAsBigDecimal(), new BigDecimal("17.49"));
 	}
 }

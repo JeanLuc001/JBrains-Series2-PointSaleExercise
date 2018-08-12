@@ -37,27 +37,30 @@ public class Checkout
 		{
 			BigDecimal priceAsBigDecimal = oPriceAsBigDecimal.get();
 			purchaseAsBigDecimals.add(priceAsBigDecimal);
-//			disp.show("$ " + priceAsBigDecimal.toString());
-			
+			// disp.show("$ " + priceAsBigDecimal.toString());
 			Price price = oPrice.get();
 			purchase.add(price);
 			disp.show(price.toString());
 		}
 	}
 
-	public BigDecimal getTotal()
+	public BigDecimal getTotalAsBigDecimal()
 	{
 		BigDecimal totalAsBigDecimal = BigDecimal.ZERO;
 		for (BigDecimal itemPrice : purchaseAsBigDecimals)
 		{
 			totalAsBigDecimal = totalAsBigDecimal.add(itemPrice);
 		}
-		
-//		Price total = new Price("0.00");
-//		for (Price price : purchase)
-//		{
-//			total = total.add(other);
-//		}
 		return totalAsBigDecimal;
+	}
+
+	public Price getTotal()
+	{
+		Price total = new Price("0.00");
+		for (Price price : purchase)
+		{
+			total = total.add(price);
+		}
+		return total;
 	}
 }
