@@ -9,16 +9,7 @@ public class Checkout
 {
 	private final Display disp;
 	private final Inventory inventory;
-	private List<Item> purchase;
-	private static class Item
-	{
-		private final BigDecimal price;
-
-		public Item(BigDecimal price)
-		{
-			this.price = price;
-		}
-	}
+	private List<BigDecimal> purchase;
 
 	public Checkout(Display disp)
 	{
@@ -42,7 +33,7 @@ public class Checkout
 		else
 		{
 			BigDecimal price = oPrice.get();
-			purchase.add(new Item(price));
+			purchase.add(price);
 			disp.show("$ " + price.toString());
 		}
 	}
@@ -50,9 +41,9 @@ public class Checkout
 	public BigDecimal getTotal()
 	{
 		BigDecimal total = BigDecimal.ZERO;
-		for (Item item : purchase)
+		for (BigDecimal itemPrice : purchase)
 		{
-			total = total.add(item.price);
+			total = total.add(itemPrice);
 		}
 		return total;
 	}
