@@ -22,6 +22,10 @@ public class SimpleInventory implements Inventory
 	@Override
 	public void addProduct(String code, Price price)
 	{
+		if (code == null || price == null)
+		{
+			throw new IllegalArgumentException("neither code nor price can be null");
+		}
 		priceByCode.put(code, price);
 	}
 }
