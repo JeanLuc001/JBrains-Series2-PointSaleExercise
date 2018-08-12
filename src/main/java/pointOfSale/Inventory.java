@@ -5,5 +5,7 @@ import java.util.Optional;
 
 public interface Inventory
 {
-	Optional<BigDecimal> getProductPriceFromCode(String code);
+	Optional<BigDecimal> getProductPriceFromCodeAsBigDecimal(String code);
+
+	Optional<Price> getProductPriceFromCode(String code);
 }

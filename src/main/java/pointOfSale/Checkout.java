@@ -25,7 +25,7 @@ public class Checkout
 
 	public void onBarcode(String code)
 	{
-		Optional<BigDecimal> oPrice = inventory.getProductPriceFromCode(code);
+		Optional<BigDecimal> oPrice = inventory.getProductPriceFromCodeAsBigDecimal(code);
 		if (!oPrice.isPresent())
 		{
 			disp.show("ERROR: " + code + " is an invalid bar code");

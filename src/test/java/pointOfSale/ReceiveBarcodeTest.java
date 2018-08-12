@@ -23,7 +23,7 @@ public class ReceiveBarcodeTest
 
 	private void simulateScanningValidBarcode(String validBarcode, String priceAsString)
 	{
-		when(inventory.getProductPriceFromCode(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
+		when(inventory.getProductPriceFromCodeAsBigDecimal(validBarcode)).thenReturn(Optional.of(new BigDecimal(priceAsString)));
 		sut.onBarcode(validBarcode);
 	}
 
@@ -38,7 +38,7 @@ public class ReceiveBarcodeTest
 	public void when_product_not_in_warehouse_then_show_error_message() throws Exception
 	{
 		String invalidBarcode = "124a45";
-		when(inventory.getProductPriceFromCode(invalidBarcode)).thenReturn(Optional.empty());
+		when(inventory.getProductPriceFromCodeAsBigDecimal(invalidBarcode)).thenReturn(Optional.empty());
 		sut.onBarcode(invalidBarcode);
 		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 		verify(disp).show(argument.capture());
