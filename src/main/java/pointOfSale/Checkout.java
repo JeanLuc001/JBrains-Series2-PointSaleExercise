@@ -11,6 +11,13 @@ public class Checkout
 
 	public void onBarcode(String code)
 	{
-		disp.show("ERROR: invalid bar code");
+		if (code != null && !code.isEmpty())
+		{
+			disp.show("ERROR: " + code + " is an invalid bar code");
+		}
+		else
+		{
+			disp.show("ERROR: invalid bar code");
+		}
 	}
 }

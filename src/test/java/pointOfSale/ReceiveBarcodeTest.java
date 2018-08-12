@@ -30,4 +30,16 @@ public class ReceiveBarcodeTest
 		verify(disp).show(argument.capture());
 		assertEquals("ERROR: invalid bar code", argument.getValue());
 	}
+
+	@Test
+	public void when_barcodestring_has_wrong_format_then_display_error_message()
+	{
+		Display disp = mock(Display.class);
+		ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+		Checkout sut = new Checkout(disp);
+		String invalidBarcode = "124a45";
+		sut.onBarcode(invalidBarcode);
+		verify(disp).show(argument.capture());
+		assertEquals("ERROR: " + invalidBarcode + " is an invalid bar code", argument.getValue());
+	}
 }
